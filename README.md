@@ -155,7 +155,7 @@ Create a new object inside of the `plugins` array and add the following:
 
 This plug-in will transform our markdown files into `Markdown Remark` nodes so we can query their HTML and frontmatter.
 
-5. Stop and re-start your development server. Each time we alter the `gatsby-config.js` file, we have to restart our server.
+5. Stop and restart your development server. Each time we alter the `gatsby-config.js` file, we have to restart our server.
 
 Now, we're ready to play with some GraphQL queries.
 
