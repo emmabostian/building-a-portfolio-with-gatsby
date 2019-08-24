@@ -606,6 +606,10 @@ Now we're ready to see if it worked!
 
 ![Blog post](https://user-images.githubusercontent.com/7671983/63642557-dae16f00-c6b8-11e9-8cdf-dd7ed92307a6.png)
 
+_If you ever need to revert to this state, you can use `git checkout step-3` to check out the tag for this state._
+
+
+
 # Step 4: Adding Custom Google Fonts
 You may want to add some custom [Google fonts](https://fonts.google.com/) to your Gatsby site. Luckily there's a plug-in for that!
 
@@ -642,3 +646,23 @@ You can check out the full list of options for this plugin in the [Gatsby docs](
 4. Restart your development server to see the updated font family.
 
 ![New font](https://user-images.githubusercontent.com/7671983/63642694-2006a080-c6bb-11e9-88a5-3f66138cb06f.png)
+
+_If you ever need to revert to this state, you can use `git checkout step-4` to check out the tag for this state._
+
+
+# Step 5: Deploying To Netlify
+Gatsby makes it extremely easy to deploy your site using Netlify.
+
+1. Head over to [Netlify](https://app.netlify.com/) and sign up for an account.
+2. Click "New site from Git".
+3. Select "GitHub" for continuous deployment, authenticate with your GitHub account, and select the repository.
+4. Set your build options (I leave the defaults).
+5. Click "Deploy site".
+
+![Building](https://user-images.githubusercontent.com/7671983/63642758-4416b180-c6bc-11e9-8015-ca86f65c7dce.png)
+
+Now, every time I push to `master`, my site will deploy.
+
+Once your site deploys, head over to the URL to check it out! You can easily add [custom domains](https://www.netlify.com/docs/custom-domains/) with Netlify to personalize your portfolio.
+
+
