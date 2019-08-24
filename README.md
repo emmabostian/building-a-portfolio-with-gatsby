@@ -99,7 +99,7 @@ export default Nav;
 
 _If you ever need to revert to this state, you can use `git checkout step-2` to check out the tag for this state._
 
-# Step 3: Listing All Blog Posts
+# Step 3: Rendering Blog Posts
 Having a blog on your portfolio is a great way to showcase your work. So let's add a blog to our portfolio!
 
 Gatsby works with GraphQL to do all sorts of robust data fetching. We won't delve into GraphQL in this blog post, but you can check out the [documentation](https://www.gatsbyjs.org/docs/querying-with-graphql/).
@@ -333,3 +333,275 @@ Let's check out if our blog posts are being rendered:
 Great! but we get a 404 error if we click the "Read more" link.
 
 That's because we haven't created the query for our individual blog posts.
+
+
+## Retrieving An Individual Blog Post
+13. Back in [GraphiQL](http://localhost:8000/___graphql), let's create a new query.
+
+Using the explorer in the left-hand sidebar, select the following:
+```
+markdownRemark
+  > frontmatter
+    - date
+    - description
+    - path
+    - title
+  - html
+  - id
+```
+
+14. Change the name of the query to `BlogPost`.
+
+15. We'll need to pass data for an individual blog post in order to retrieve its data, so let's create a `$path` argument. We'll set it to a `String` data type and require it be passed in.
+
+```jsx
+query BlogPost($path:String!){
+  markdownRemark (frontmatter: { path: { eq: $path } }){
+    frontmatter {
+      date
+      description
+      path
+      title
+    }
+    html
+    id
+  }
+}
+```
+
+16. Let's test if this works by adding a query variable.
+
+At the bottom of GraphiQL there is a Query Variables text editor. Click to open it, and add the following:
+
+```jsx
+{
+ "path": "/five-tech-skills-to-master"
+}
+```
+
+17. To test that this works, click the play button. You should see the "Five tech skills to master" blog post data populate the right side of GraphiQL.
+
+![Five tech skills data](https://user-images.githubusercontent.com/7671983/63642544-a7064980-c6b8-11e9-8232-95da7087e86d.png)
+
+18. Now let's use our data to build individual blog pages.
+
+First, let's create a template which will be used to dynamically render each blog when the "Read more" link is clicked.
+
+Open the `blogPost.js` file located in the `templates/` directory.
+
+19. Inside of the `postQuery` declaration, paste our newly-created GraphQL query:
+```jsx
+export const postQuery = graphql`
+  query BlogPost($path: String!) {
+    markdownRemark(frontmatter: { path: { eq: $path } }) {
+        html
+        frontmatter {
+        date
+        path
+        title
+        }
+    }
+  }
+```
+
+20. Now we can pass `data` from the GraphQL query as a de-structured prop to the template and render the data:
+
+We'll save `data.markdownRemark` as a constant called `post` to make our rendering a little nicer.
+
+```jsx
+const post = data.markdownRemark
+```
+
+21. Finally, let's add the following JSX elements:
+- A `<h1>` containing the post title
+- An `<h4>` containing the author and date
+- A `<div>` containing the HTML for the post.
+
+To render the HTML, we'll use Gatsby's `dangerouslySetInnerHTML` and pass in `post.html`:
+
+```jsx
+<div dangerouslySetInnerHTML={{ __html: post.html }} />
+```
+
+We will wrap all of the blog post JSX inside of the `<Layout>` component.
+
+Here is the completed `blogPost.js` template:
+
+```jsx
+
+import React from 'react'
+import { Link, graphql } from 'gatsby'
+
+import Layout from '../components/layout'
+
+export default function Template({ data }) {
+  const post = data.markdownRemark
+
+  return (
+    <Layout>
+      <Link
+        to="/writing"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          fontSize: '.8em',
+          color: '#4A4A4A',
+          textDecoration: 'none',
+          marginTop: '50px',
+        }}
+      >
+        Back to blogs
+      </Link>
+      <h1
+        style={{
+          marginTop: '20px',
+        }}
+      >
+        {post.frontmatter.title}
+      </h1>
+      <h4
+        style={{
+          fontSize: '.8em',
+          color: '#9fa7a7',
+          fontWeight: '400',
+        }}
+      >
+        Posted by {post.frontmatter.author} on {post.frontmatter.date}
+      </h4>
+      <div dangerouslySetInnerHTML={{ __html: post.html }} />
+    </Layout>
+  )
+}
+  
+export const postQuery = graphql`
+query BlogPost($path: String!) {
+  markdownRemark(frontmatter: { path: { eq: $path } }) {
+    html
+    frontmatter {
+      date
+      path
+      title
+    }
+  }
+}
+`
+```
+
+22. There's one last thing we have to add to get our blog posts to render.
+
+We don't want to create individual pages for each blog post; that would be extremely time consuming!
+
+Instead, we want to use GraphQL to dynamically create each page.
+
+We can do this within `gatsby-node.js`.
+
+- Inside of `gatsby-node.js`, import `path`, a [node module](https://nodejs.org/api/path.html) for working with our file directories.
+
+```jsx
+const path = require('path')
+```
+
+- Let's use the node `exports.createPages` [API](https://www.gatsbyjs.org/docs/node-apis/) to dynamically generate our pages.
+
+I won't delve into the details of the `createPages` API in this post, but you can check out the documentation linked above.
+
+Add the follwing code underneath the `path` module import:
+
+```jsx
+exports.createPages = ({ boundActionCreators, graphql }) => {
+  const { createPage } = boundActionCreators
+
+  const postTemplate = path.resolve('src/templates/blogPost.js')
+  })
+}
+```
+
+- Now we want to return a GraphQL query to grab all of the blog posts:
+
+```jsx
+return graphql(`
+    {
+      allMarkdownRemark {
+        edges {
+          node {
+            html
+            id
+            frontmatter {
+              path
+              title
+              date
+              author
+            }
+          }
+        }
+      }
+    }
+`)
+```
+
+- Once we receive a response back from the query, we want to reject the promise if an error occurred, and otherwise create a page for each post.
+
+This will create a post at the designated path received from the query results, and will use the `postTemplate` we declared above (our `blogPost.js` template) to render each post.
+
+```jsx
+...
+).then(res => {
+    if (res.errors) {
+      return Promise.reject(res.errors)
+    }
+
+    res.data.allMarkdownRemark.edges.forEach(({ node }) => {
+      createPage({
+        path: node.frontmatter.path,
+        component: postTemplate,
+      })
+})
+```
+
+Here's the finalized code for `gatsby-node.js`:
+
+```jsx
+const path = require('path')
+
+exports.createPages = ({ boundActionCreators, graphql }) => {
+  const { createPage } = boundActionCreators
+
+  const postTemplate = path.resolve('src/templates/blogPost.js')
+
+  return graphql(`
+    {
+      allMarkdownRemark {
+        edges {
+          node {
+            html
+            id
+            frontmatter {
+              path
+              title
+              date
+              author
+            }
+          }
+        }
+      }
+    }
+  `).then(res => {
+    if (res.errors) {
+      return Promise.reject(res.errors)
+    }
+
+    res.data.allMarkdownRemark.edges.forEach(({ node }) => {
+      createPage({
+        path: node.frontmatter.path,
+        component: postTemplate,
+      })
+    })
+  })
+}
+```
+
+Now we're ready to see if it worked!
+
+23. Re-start your development server, then head over to the browser and click one of the blog post "Read more" links:
+
+![Blog post](https://user-images.githubusercontent.com/7671983/63642557-dae16f00-c6b8-11e9-8cdf-dd7ed92307a6.png)
