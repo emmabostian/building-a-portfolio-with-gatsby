@@ -605,3 +605,40 @@ Now we're ready to see if it worked!
 23. Re-start your development server, then head over to the browser and click one of the blog post "Read more" links:
 
 ![Blog post](https://user-images.githubusercontent.com/7671983/63642557-dae16f00-c6b8-11e9-8cdf-dd7ed92307a6.png)
+
+# Step 4: Adding Custom Google Fonts
+You may want to add some custom [Google fonts](https://fonts.google.com/) to your Gatsby site. Luckily there's a plug-in for that!
+
+1. In the terminal run the following command to install the Google fonts plugin:
+```
+npm i gatsby-plugin-google-fonts --save
+```
+
+2. Inside `gatsby-config.js`, we need to configure the plug-in. 
+
+I'm choosing to use the font PT Serif, but you can select whichever font you prefer.
+
+Add the following to the `plugins` array:
+
+```jsx
+plugins: [
+    ...
+    {
+      resolve: `gatsby-plugin-google-fonts`,
+      options: {
+        fonts: [
+          `PT Serif`,
+        ],
+        display: 'swap'
+      }
+    },
+]
+```
+
+You can check out the full list of options for this plugin in the [Gatsby docs](https://www.gatsbyjs.org/packages/gatsby-plugin-google-fonts/).
+
+3. Inside of `nav.css` update the `.nav__list` selector to use `font-family: 'PT Serif', sans-serif`;
+
+4. Restart your development server to see the updated font family.
+
+![New font](https://user-images.githubusercontent.com/7671983/63642694-2006a080-c6bb-11e9-88a5-3f66138cb06f.png)
