@@ -6,6 +6,16 @@
     padding-bottom: 50px;
     border-bottom: 1px solid #efefef;
   }
+
+  .blogSquare__link {
+    text-decoration: none;
+    color: #4a4a4a;
+  }
+
+  .blogSquare__readMore {
+    font-size: .8em;
+    text-decoration: underline;
+  }
   
   .blogSquare__title {
     font-weight: 200;

@@ -1,0 +1,18 @@
+.blogPost__backToBlogs {
+    display: flex;
+    align-items: center;
+    font-size: .8em;
+    color: #4a4a4a;
+    text-decoration: none;
+    margin-top: 50px;
+}
+
+.blogPost__title {
+    margin-top: 20px;
+}
+
+blogPost__postedByDate {
+    font-size: .8em;
+    color: #9fa7a7;
+    font-weight: 400;
+}
