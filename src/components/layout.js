@@ -1,6 +1,9 @@
 import React from "react"
 import PropTypes from "prop-types"
 import { useStaticQuery, graphql } from "gatsby"
+
+import Nav from "../components/nav";
+
 import "./layout.css"
 
 const Layout = ({ children }) => {
@@ -16,6 +19,7 @@ const Layout = ({ children }) => {
 
   return (
     <div className='layout'>
+      <Nav />
       <main className='main'>{children}</main>
     </div>
   )
