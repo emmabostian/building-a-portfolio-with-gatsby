@@ -1,6 +1,7 @@
 # Building A Portfolio With Gatsby
 A step-by-step tutorial on how to build a portfolio with Gatsby
 
+You can view the final site [here](https://building-a-portfolio-with-gatsby.netlify.com)
 # Step 1: Getting Started
 1. Fork & clone this repository
 2. Change directories `cd building-a-portfolio-with-gatsby`
