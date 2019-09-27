@@ -21,7 +21,7 @@ We want to create a navigation sidebar with four links:
 - Podcasting
 
 1. Open `nav.js` from the components folder.
-2. Let's add some semantic HTML for a navigation component:
+2. Let's add some semantic HTML for a navigation component as the return value for our component:
 ```jsx
 <nav className="nav">
     <h3 className="nav__title">My Portfolio</h3>
@@ -127,7 +127,7 @@ I won't be delving into [GraphQL](https://graphql.org/) or [GraphiQL](https://el
 
 3. First, we need to install a plug-in to work with our markdown files. We will use the [gatsby-transformer-remark](https://www.gatsbyjs.org/packages/gatsby-transformer-remark/) plug-in to accomplish this task.
 ```
-npm i gatsby-transformer-remark --save
+yarn add gatsby-transformer-remark gatsby-source-filesystem
 ```
 
 4. Now that we've installed the plug-in as a dependency, we need to tell Gatsby to actually use it.
@@ -221,7 +221,7 @@ To ensure our data is comning in as expected, add the following code underneath 
 ))}
 ```
 
-7. If we head over to the browser, we should see names of our two blog posts:
+7. If we head over to the browser  and go to the writing page, we should see names of our two blog posts:
 ![Blog data](https://user-images.githubusercontent.com/7671983/63642049-8df99a80-c6b0-11e9-9a1f-9eda58bb0047.png)
 
 8. Now we want to actually make this data look nice. We will create a structure for each blog post with the `blogSquare.js` component.
@@ -404,9 +404,15 @@ export const postQuery = graphql`
         }
     }
   }
+`
 ```
 
-20. Now we can pass `data` from the GraphQL query as a de-structured prop to the template and render the data:
+20. Now we can pass `data` from the GraphQL query as a de-structured prop to the template and render the data.
+```
+export default function Template({ data }) {
+  
+}
+```
 
 We'll save `data.markdownRemark` as a constant called `post` to make our rendering a little nicer.
 
@@ -514,7 +520,6 @@ exports.createPages = ({ boundActionCreators, graphql }) => {
   const { createPage } = boundActionCreators
 
   const postTemplate = path.resolve('src/templates/blogPost.js')
-  })
 }
 ```
 
@@ -547,7 +552,7 @@ This will create a post at the designated path received from the query results, 
 
 ```jsx
 ...
-).then(res => {
+`).then(res => {
     if (res.errors) {
       return Promise.reject(res.errors)
     }
@@ -617,7 +622,7 @@ You may want to add some custom [Google fonts](https://fonts.google.com/) to you
 
 1. In the terminal run the following command to install the Google fonts plugin:
 ```
-npm i gatsby-plugin-google-fonts --save
+yarn add gatsby-plugin-google-fonts
 ```
 
 2. Inside `gatsby-config.js`, we need to configure the plug-in. 
